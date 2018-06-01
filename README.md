@@ -1,29 +1,108 @@
-# README #
+Ambient-Go
+=====================
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Ambient client library for Go language
 
-### What is this repository for? ###
+  * https://ambidata.io
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+This library is base on Ambient Python client library
+  * https://github.com/AmbientDataInc/ambient-python-lib
 
-### How do I get set up? ###
+```go
+package main
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+import (
+  "log"
+  "github.com/sakurahilljp/ambient-go"
+)
 
-### Contribution guidelines ###
+func main() {
+  client := ambient.NewClient(1234, "writeky")
 
-* Writing tests
-* Code review
-* Other guidelines
+  dp := ambient.NewDataPoint()
+  dp["d1"] = ReadTemperature()
+  dp["d2"] = ReadPressure()
+  dp["d2"] = ReadHumidity()
 
-### Who do I talk to? ###
+  err := client.Send(dp)
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
 
-* Repo owner or admin
-* Other community or team contact
+## Installation
+
+
+To install docopt in your `$GOPATH`:
+
+```console
+$ go get  -u github.com/sakurahilljp/ambient-go
+```
+
+```go
+import "github.com/sakurahilljp/ambient-go"
+```
+
+## API
+
+GoDoc: https://godoc.org/github.com/sakurahilljp/ambient-go
+
+### Send
+
+Send a signle point with automatic timestamp
+
+```go
+client := NewClient(1234, "writekey")
+	
+dp := NewDataPoint()
+dp["d1"] = 19.2
+dp["d2"] = 21.3
+  
+client.Send(dp)
+```
+
+Send multiple points with explicit timestamp
+
+```go
+client := NewClient(1234, "writekey")
+	
+t1 := time.Now()
+dp1 := NewDataPoint(t1)
+dp1["d1"] = 1.23
+
+t2 := time.Now()
+dp2 := NewDataPoint(t2)
+dp2["d1"] = 2.34
+
+c.Send(dp1, dp2)
+```
+
+
+### Read
+
+Specifies data points with count and skip
+```go
+values, err := client.Read(Count(100))
+values, err := client.Read(Count(100), Skip(100))
+```
+
+Read data points at a specified date
+```go
+values, err := client.Read(Date(time.Now())
+```
+
+Read data points in a specified time ranage.
+```go
+ent := time.Now()
+start := end.Add(-time.Hour * 24)
+
+values, err := client.Read(start, end)
+```
+
+### GetProp
+
+Get properties of a channel.
+```go
+prop, err := client.GetProp()
+```

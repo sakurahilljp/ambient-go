@@ -1,3 +1,5 @@
+// Package ambient is a client library for Ambient (http://ambidata.io)
+
 package ambient
 
 import (
@@ -21,6 +23,7 @@ type Client struct {
 
 type ClientOption func(*Client) error
 
+// UserKey specifies user key.
 func UserKey(v string) ClientOption {
 	return func(c *Client) error {
 		c.UserKey = v
@@ -28,6 +31,7 @@ func UserKey(v string) ClientOption {
 	}
 }
 
+// ReadKey specifies read key.
 func ReadKey(v string) ClientOption {
 	return func(c *Client) error {
 		c.ReadKey = v
@@ -35,6 +39,7 @@ func ReadKey(v string) ClientOption {
 	}
 }
 
+// NewClient creates Client for Ambient.
 func NewClient(channelId int, writeKey string, opts ...ClientOption) *Client {
 
 	client := &Client{
@@ -50,8 +55,10 @@ func NewClient(channelId int, writeKey string, opts ...ClientOption) *Client {
 	return client
 }
 
+// DataPoint represents a point in series.
 type DataPoint map[string]interface{}
 
+// NewDataPoint creates a data point. If t is provided, 'created' field will be sent.
 func NewDataPoint(t ...time.Time) DataPoint {
 
 	dp := DataPoint{}
@@ -61,6 +68,7 @@ func NewDataPoint(t ...time.Time) DataPoint {
 	return dp
 }
 
+// Send sends multiple data points to Ambient.
 func (c *Client) Send(points ...DataPoint) error {
 
 	args := map[string]interface{}{}
@@ -89,12 +97,14 @@ type ReadArgument struct {
 
 type ReadOption func(*ReadArgument)
 
+// Date adds 'date' field to read request.
 func Date(t time.Time) ReadOption {
 	return func(arg *ReadArgument) {
 		arg.query.Add("date", t.Format("2006-01-02"))
 	}
 }
 
+// Range adds 'start' and 'end' fields to read request
 func Range(start, end time.Time) ReadOption {
 	return func(arg *ReadArgument) {
 		arg.query.Add("start", start.Format("2006-01-02 15:04:05"))
@@ -102,18 +112,21 @@ func Range(start, end time.Time) ReadOption {
 	}
 }
 
+// Count adds 'n' field to read request.
 func Count(n int) ReadOption {
 	return func(arg *ReadArgument) {
 		arg.query.Add("n", strconv.Itoa(n))
 	}
 }
 
+// Skip adds 'skip' field to read request.
 func Skip(skip int) ReadOption {
 	return func(arg *ReadArgument) {
 		arg.query.Add("skip", strconv.Itoa(skip))
 	}
 }
 
+// Read returns data points from Ambient.
 func (c *Client) Read(opts ...ReadOption) ([]map[string]interface{}, error) {
 
 	arg := &ReadArgument{query: make(url.Values)}
@@ -152,6 +165,7 @@ func (c *Client) Read(opts ...ReadOption) ([]map[string]interface{}, error) {
 	}
 }
 
+// GetProp reaturns properties of a channel.
 func (c *Client) GetProp() (map[string]interface{}, error) {
 
 	query := url.Values{}
