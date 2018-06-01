@@ -1,29 +1,51 @@
-# README #
+Ambient-Go
+=====================
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Ambient client library for Go language
 
-### What is this repository for? ###
+  * https://ambidata.io
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+This library is base on Ambient Python client library
+  * https://github.com/AmbientDataInc/ambient-python-lib
 
-### How do I get set up? ###
+```go
+package main
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+import (
+  "log"
+  "github.com/sakurahilljp/ambient-go"
+)
 
-### Contribution guidelines ###
+func main() {
+  client := ambient.NewClient(1234, "writeky")
 
-* Writing tests
-* Code review
-* Other guidelines
+  dp := ambient.NewDataPoint()
+  dp["d1"] = 1.23
 
-### Who do I talk to? ###
+  err := client.Send(dp)
+  if err != nil {
+	log.Fatal(err)
+  }
+}
+```
 
-* Repo owner or admin
-* Other community or team contact
+## Installation
+
+
+To install docopt in your `$GOPATH`:
+
+```console
+$ go get  -u github.com/sakurahilljp/ambient-go
+```
+
+```go
+import "github.com/sakurahilljp/ambient-go"
+```
+
+## API
+
+### Send
+
+### Read
+
+### GetProp
