@@ -20,11 +20,13 @@ func main() {
   client := ambient.NewClient(1234, "writeky")
 
   dp := ambient.NewDataPoint()
-  dp["d1"] = 1.23
+  dp["d1"] = ReadTemperature()
+  dp["d2"] = ReadPressure()
+  dp["d2"] = ReadHumidity()
 
   err := client.Send(dp)
   if err != nil {
-	log.Fatal(err)
+    log.Fatal(err)
   }
 }
 ```
@@ -44,8 +46,63 @@ import "github.com/sakurahilljp/ambient-go"
 
 ## API
 
+GoDoc: https://godoc.org/github.com/sakurahilljp/ambient-go
+
 ### Send
+
+Send a signle point with automatic timestamp
+
+```go
+client := NewClient(1234, "writekey")
+	
+dp := NewDataPoint()
+dp["d1"] = 19.2
+dp["d2"] = 21.3
+  
+client.Send(dp)
+```
+
+Send multiple points with explicit timestamp
+
+```go
+client := NewClient(1234, "writekey")
+	
+t1 := time.Now()
+dp1 := NewDataPoint(t1)
+dp1["d1"] = 1.23
+
+t2 := time.Now()
+dp2 := NewDataPoint(t2)
+dp2["d1"] = 2.34
+
+c.Send(dp1, dp2)
+```
+
 
 ### Read
 
+Specifies data points with count and skip
+```go
+values, err := client.Read(Count(100))
+values, err := client.Read(Count(100), Skip(100))
+```
+
+Read data points at a specified date
+```go
+values, err := client.Read(Date(time.Now())
+```
+
+Read data points in a specified time ranage.
+```go
+ent := time.Now()
+start := end.Add(-time.Hour * 24)
+
+values, err := client.Read(start, end)
+```
+
 ### GetProp
+
+Get properties of a channel.
+```go
+prop, err := client.GetProp()
+```
