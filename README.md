@@ -34,7 +34,7 @@ func main() {
 ## Installation
 
 
-To install docopt in your `$GOPATH`:
+To install ambient-go in your `$GOPATH`:
 
 ```console
 $ go get  -u github.com/sakurahilljp/ambient-go
