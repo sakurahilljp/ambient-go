@@ -3,7 +3,7 @@ Ambient-Go
 
 Ambient client library for Go language
 
-  * https://ambidata.io
+  * https://ambidata.io (Ambient - IoTデーターの可視化サービス)
 
 This library is base on Ambient Python client library
   * https://github.com/AmbientDataInc/ambient-python-lib
